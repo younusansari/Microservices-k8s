@@ -116,3 +116,6 @@ spec:
             cpu: "0.5"
 
 ```
+
+<img width="901" height="523" alt="image" src="https://github.com/user-attachments/assets/5aad6119-cd03-4aa0-8848-68c6e0fc18b1" />
+
