@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+  labels:
+    app: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+      - name: gateway
+        image: younusansari/gateway-service:latest
+        ports:
+        - containerPort: 3003
+        resources:
+          limits:
+            cpu: "1"
+          requests:
+            cpu: "0.5"
