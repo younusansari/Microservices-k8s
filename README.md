@@ -86,8 +86,8 @@ Happy testing!
    ```
 3. Create Deployment yaml files
 
-  a. deployment-user.yaml
-   ```
+deployment-user.yaml
+```
     apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -114,4 +114,4 @@ Happy testing!
                 cpu: "1"
               requests:
                 cpu: "0.5"
-      ```
+```
