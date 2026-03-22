@@ -85,7 +85,8 @@ Happy testing!
    docker push younusansari/gateway-service:latest
    ```
 3. Create Deployment yaml files
-   a.deployment-user.yaml
+
+a. deployment-user.yaml
    ```
     apiVersion: apps/v1
     kind: Deployment
