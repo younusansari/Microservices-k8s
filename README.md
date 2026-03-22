@@ -66,3 +66,51 @@ This document provides details on testing various services after running the `do
 2. Once the services are running, use the above endpoints to verify the functionality.
 
 Happy testing!
+
+## In order to deploy this application in Kubernetes follow the below instructions
+
+1. Tag the lable and push your docker images to DockerHub or any other registry
+
+   ```
+   docker tag microservices_order-service:latest younusansari/order-service:latest
+   docker tag microservices_product-service:latest younusansari/product-service:latest
+   docker tag microservices_user-service:latest younusansari/user-service:latest
+   docker tag microservices_gateway-service:latest younusansari/gateway-service:latest
+   ```
+2. Push Docker images to docker hub
+   ```
+   docker push younusansari/user-service:latest
+   docker push younusansari/product-service:latest
+   docker push younusansari/order-service:latest
+   docker push younusansari/gateway-service:latest
+   ```
+3. Create Deployment yaml files
+   a.deployment-user.yaml
+   ```
+   apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  labels:
+    app: user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+      - name: user
+        image: younusansari/user-service:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: "1"
+          requests:
+            cpu: "0.5"
+    ```
