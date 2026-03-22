@@ -88,30 +88,31 @@ Happy testing!
 
 deployment-user.yaml
 ```
-    apiVersion: apps/v1
-    kind: Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  labels:
+    app: user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+  template:
     metadata:
-      name: user-deployment
       labels:
         app: user
     spec:
-      replicas: 1
-      selector:
-        matchLabels:
-          app: user
-      template:
-        metadata:
-          labels:
-            app: user
-        spec:
-          containers:
-          - name: user
-            image: younusansari/user-service:latest
-            ports:
-            - containerPort: 3000
-            resources:
-              limits:
-                cpu: "1"
-              requests:
-                cpu: "0.5"
+      containers:
+      - name: user
+        image: younusansari/user-service:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: "1"
+          requests:
+            cpu: "0.5"
+
 ```
