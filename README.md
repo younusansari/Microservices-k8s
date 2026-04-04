@@ -188,49 +188,45 @@ Deployment Evidence:
 Project Structure (Clean & Production-Friendly)
 
 blue-green-deployment/
-?
-??? backend/
-? ??? Dockerfile
-? ??? package.json
-? ??? package-lock.json
-? ??? server.js
-? ??? .env # (optional - for local only)
-?
-??? frontend-blue/
-? ??? Dockerfile
-? ??? package.json
-? ??? package-lock.json
-? ??? server.js
-? ??? .env
-?
-??? frontend-green/
-? ??? Dockerfile
-? ??? package.json
-? ??? package-lock.json
-? ??? server.js
-? ??? .env
-?
-??? k8s/
-? ??? backend-deployment.yaml
-? ??? frontend-blue-deployment.yaml
-? ??? frontend-green-deployment.yaml
-? ??? frontend-service.yaml
-? ??? ingress.yaml # optional
-? ??? namespace.yaml # optional
-?
-??? docker-compose.yml
-??? .gitignore
-??? README.md
+│
+├── backend/
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── server.js
+│   └── .env                # (optional - for local only)
+│
+├── frontend-blue/
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── server.js
+│   └── .env
+│
+├── frontend-green/
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── server.js
+│   └── .env
+│
+├── k8s/
+│   ├── backend-deployment.yaml
+│   ├── frontend-blue-deployment.yaml
+│   ├── frontend-green-deployment.yaml
+│   ├── frontend-service.yaml
+│   ├── ingress.yaml              # optional
+│   └── namespace.yaml            # optional
+│
+├── docker-compose.yml
+├── .gitignore
+└── README.md
 
 
 To build docker images using docker compose: 
 
 docker-compose build
-
-
-
-
-
+<img width="1061" height="108" alt="image" src="https://github.com/user-attachments/assets/e3fec380-8c51-4062-976f-3391b4b3f123" />
 
 
 
@@ -291,6 +287,12 @@ Now http://localhost:8080/health should show Green frontend
 Note: we have to stop the port-forwarding and re do it 
 
 kubectl port-forward svc/frontend-service 8080:80
+
+
+To clean up 
+<img width="1476" height="189" alt="image" src="https://github.com/user-attachments/assets/606a4c60-4664-49eb-a90e-7a3621ccca5c" />
+
+<img width="1433" height="290" alt="image" src="https://github.com/user-attachments/assets/40e99d91-dad0-4183-8e05-f0dcbf6030fd" />
 
 
 
