@@ -236,6 +236,12 @@ http://localhost:8080/health
 ```
 <img width="950" height="234" alt="image" src="https://github.com/user-attachments/assets/08ac46fc-db9d-46ae-9adc-230c1bc8a9d1" />
 
+Open the application it should be running blue - basic application
+```
+http://localhost:8080
+```
+<img width="1812" height="1309" alt="image" src="https://github.com/user-attachments/assets/0b0e2c96-e6fa-4106-ab34-ac7a684dc38a" />
+
 
 Switch the services to green:
 ```
@@ -254,6 +260,12 @@ Now test the health of frontend it should show Frontend services are running fro
 http://localhost:8080/health
 ```
 <img width="864" height="229" alt="image" src="https://github.com/user-attachments/assets/1a24bdb7-ad2a-4ad5-b4fd-ab6c62abd263" />
+
+Open Application it should load Green application
+```
+http://localhost:8080
+```
+<img width="1866" height="1272" alt="image" src="https://github.com/user-attachments/assets/0611d35d-b1a6-4c8e-97b8-630125235106" />
 
 
 To clean up 
