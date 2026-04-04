@@ -1,121 +1,296 @@
-# Microservices-Task
+# Blue-Green Deployment Project
 
-## Overview
-This document provides details on testing various services after running the `docker-compose` file. These services include User, Product, Order, and Gateway Services. Each service has its own endpoints for testing purposes.
+## Prerequisites
+- Docker Desktop
+- Minikube
+- kubectl
+- Helm
+- Node.js
+- Git
 
----
+## Project Setup
 
-## Services and Endpoints
-
-### **User Service**
-- **Base URL:** `http://localhost:3000`
-- **Endpoints:**
-  - **List Users:**  
-    ```
-    curl http://localhost:3000/users
-    ```
-    Or open in your browser: [http://localhost:3000/users](http://localhost:3000/users)
-
----
-
-### **Product Service**
-- **Base URL:** `http://localhost:3001`
-- **Endpoints:**
-  - **List Products:**  
-    ```
-    curl http://localhost:3001/products
-    ```
-    Or open in your browser: [http://localhost:3001/products](http://localhost:3001/products)
-
----
-
-### **Order Service**
-- **Base URL:** `http://localhost:3002`
-- **Endpoints:**
-  - **List Orders:**  
-    ```
-    curl http://localhost:3002/orders
-    ```
-    Or open in your browser: [http://localhost:3002/orders](http://localhost:3002/orders)
-
----
-
-### **Gateway Service**
-- **Base URL:** `http://localhost:3003/api`
-- **Endpoints:**
-  - **Users:**  
-    ```
-    curl http://localhost:3003/api/users
-    ```
-  - **Products:**  
-    ```
-    curl http://localhost:3003/api/products
-    ```
-  - **Orders:**  
-    ```
-    curl http://localhost:3003/api/orders
-    ```
-
----
-
-## Instructions
-1. Start all services using the `docker-compose` file:
-   ```
-   docker-compose up
-   ```
-2. Once the services are running, use the above endpoints to verify the functionality.
-
-Happy testing!
-
-## In order to deploy this application in Kubernetes follow the below instructions
-
-1. Tag the lable and push your docker images to DockerHub or any other registry
-
-   ```
-   docker tag microservices_order-service:latest younusansari/order-service:latest
-   docker tag microservices_product-service:latest younusansari/product-service:latest
-   docker tag microservices_user-service:latest younusansari/user-service:latest
-   docker tag microservices_gateway-service:latest younusansari/gateway-service:latest
-   ```
-2. Push Docker images to docker hub
-   ```
-   docker push younusansari/user-service:latest
-   docker push younusansari/product-service:latest
-   docker push younusansari/order-service:latest
-   docker push younusansari/gateway-service:latest
-   ```
-3. Create Deployment yaml files
-
-deployment-user.yaml
-```
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: user-deployment
-  labels:
-    app: user
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: user
-  template:
-    metadata:
-      labels:
-        app: user
-    spec:
-      containers:
-      - name: user
-        image: younusansari/user-service:latest
-        ports:
-        - containerPort: 3000
-        resources:
-          limits:
-            cpu: "1"
-          requests:
-            cpu: "0.5"
-
+### 1. Clone the Repository
+```bash
+git clone <your-repository-url>
+cd blue-green-project
 ```
 
-<img width="901" height="523" alt="image" src="https://github.com/user-attachments/assets/5aad6119-cd03-4aa0-8848-68c6e0fc18b1" />
+### 2. Local Development
+
+#### Backend Setup
+1. Navigate to backend directory
+2. Install dependencies
+```bash
+cd backend
+npm install
+```
+3. Create `.env` file with:
+```
+PORT=5000
+MONGO_URI=your-mongodb-connection-string
+```
+4. Start backend server
+```bash
+npm start
+```
+
+#### Frontend Setup
+1. Setup Blue Frontend
+```bash
+cd frontend-blue
+npm install
+```
+2. Create `.env` file:
+```
+PORT=3100
+```
+3. Start blue frontend
+```bash
+npm start
+```
+
+3. Repeat similar steps for Green Frontend (with PORT=3200)
+
+### 3. Dockerization
+
+#### Build Docker Images
+```bash
+# Build Backend Image
+docker build -t your-username/backend:v1 ./backend
+
+# Build Blue Frontend Image
+docker build -t your-username/frontend-blue:v1 ./frontend-blue
+
+# Build Green Frontend Image
+docker build -t your-username/frontend-green:v1 ./frontend-green
+```
+
+### 4. Kubernetes Deployment
+
+#### Minikube Setup
+1. Start Minikube
+```bash
+minikube start
+```
+
+2. Enable Required Addons
+```bash
+minikube addons enable metrics-server
+minikube addons enable ingress
+```
+
+### 5. Create Kubernetes Manifest Files
+
+#### Required Manifest Files
+Create following files in `k8s/` directory:
+- `backend-deployment.yaml`
+- `frontend-blue-deployment.yaml`
+- `frontend-green-deployment.yaml`
+- `frontend-service.yaml`
+- `ingress.yaml`
+
+#### Service File Key Concepts
+Your `frontend-service.yaml` should:
+- Use selector to route traffic
+- Define version (blue/green)
+- Map ports correctly
+
+### 6. Deploy to Minikube
+```bash
+# Apply all manifests
+kubectl apply -f k8s/
+
+# Verify deployments
+kubectl get deployments
+kubectl get services
+kubectl get pods
+```
+
+### 7. Blue-Green Switching
+
+#### Switch Traffic Methods
+
+1. Basic Patch Command
+```bash
+# Switch to Green
+kubectl patch service frontend-service -p '{"spec":{"selector":{"version":"green"}}}'
+
+# Switch back to Blue
+kubectl patch service frontend-service -p '{"spec":{"selector":{"version":"blue"}}}'
+```
+
+2. Detailed Patch Command
+```bash
+kubectl patch service frontend-service --type='merge' -p '{
+  "spec":{
+    "selector":{
+      "app":"frontend",
+      "version":"green"
+    }
+  }
+}'
+```
+
+### 8. Verification
+- Check service endpoints
+- Verify traffic routing
+- Monitor application logs
+
+### Troubleshooting
+- `kubectl get pods` - Check pod status
+- `kubectl logs <pod-name>` - View logs
+- `kubectl describe service frontend-service` - Service details
+
+### Cleanup
+```bash
+# Remove deployments
+kubectl delete -f k8s/
+
+# Stop Minikube
+minikube stop
+```
+
+## Blue-Green Deployment Flow Chart
+
+```mermaid
+graph TD
+    A[Blue Environment Running] -->|Deploy Green| B[Green Environment Prepared]
+    B -->|Validate Green| C{Green Ready?}
+    C -->|Yes| D[Update Service Selector]
+    C -->|No| B
+    D -->|Redirect Traffic| E[Green Now Active]
+    E -->|Rollback Option| A
+```
+
+### Flow Explanation
+1. Blue environment is initial production
+2. Green environment deployed alongside
+3. Validate green environment 
+4. Update service selector
+5. Redirect traffic to green
+6. Blue remains as rollback option
+
+## Best Practices
+- Implement health checks
+- Use resource limits
+- Configure monitoring
+- Validate before switching
+- Maintain rollback strategy
+
+
+## License
+This project is licensed under the MIT License
+
+
+Deployment Evidence:
+
+Project Structure (Clean & Production-Friendly)
+
+blue-green-deployment/
+?
+??? backend/
+? ??? Dockerfile
+? ??? package.json
+? ??? package-lock.json
+? ??? server.js
+? ??? .env # (optional - for local only)
+?
+??? frontend-blue/
+? ??? Dockerfile
+? ??? package.json
+? ??? package-lock.json
+? ??? server.js
+? ??? .env
+?
+??? frontend-green/
+? ??? Dockerfile
+? ??? package.json
+? ??? package-lock.json
+? ??? server.js
+? ??? .env
+?
+??? k8s/
+? ??? backend-deployment.yaml
+? ??? frontend-blue-deployment.yaml
+? ??? frontend-green-deployment.yaml
+? ??? frontend-service.yaml
+? ??? ingress.yaml # optional
+? ??? namespace.yaml # optional
+?
+??? docker-compose.yml
+??? .gitignore
+??? README.md
+
+
+To build docker images using docker compose: 
+
+docker-compose build
+
+
+
+
+
+
+
+
+
+
+
+
+
+To test the application from your local device use port-forward
+Backend service: 
+kubectl port-forward svc/backend-service 5000:5000
+
+
+Open the browser and type: http://localhost:5000/health
+
+
+
+
+
+
+Backend service: 
+kubectl port-forward svc/frontend-service 8080:80
+
+
+
+
+
+
+
+
+
+
+
+
+To get the current version selector: kubectl describe service frontend-service
+
+
+
+
+To check if frontend is running on Blue services: http://localhost:8080/health
+
+
+Switch the services to green:
+kubectl patch service frontend-service -p '{"spec":{"selector":{"version":"green"}}}'
+
+
+
+
+
+
+
+
+
+
+
+Now http://localhost:8080/health should show Green frontend
+
+Note: we have to stop the port-forwarding and re do it 
+
+kubectl port-forward svc/frontend-service 8080:80
+
+
 
