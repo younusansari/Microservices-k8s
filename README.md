@@ -187,52 +187,17 @@ Deployment Evidence:
 
 Project Structure (Clean & Production-Friendly)
 
-blue-green-deployment/
-│
-├── backend/
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── server.js
-│   └── .env                # (optional - for local only)
-│
-├── frontend-blue/
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── server.js
-│   └── .env
-│
-├── frontend-green/
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── server.js
-│   └── .env
-│
-├── k8s/
-│   ├── backend-deployment.yaml
-│   ├── frontend-blue-deployment.yaml
-│   ├── frontend-green-deployment.yaml
-│   ├── frontend-service.yaml
-│   ├── ingress.yaml              # optional
-│   └── namespace.yaml            # optional
-│
-├── docker-compose.yml
-├── .gitignore
-└── README.md
-
-
 To build docker images using docker compose: 
 
 docker-compose build
 <img width="1061" height="108" alt="image" src="https://github.com/user-attachments/assets/e3fec380-8c51-4062-976f-3391b4b3f123" />
 
 
-
-
-
-
+Apply kuberbetes files 
+```
+kubectl apply -f .\k8s\.
+```
+<img width="1292" height="209" alt="image" src="https://github.com/user-attachments/assets/6793733c-f933-4275-a3e6-bdac7a07cab1" />
 
 
 To test the application from your local device use port-forward
