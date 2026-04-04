@@ -188,8 +188,9 @@ Deployment Evidence:
 Project Structure (Clean & Production-Friendly)
 
 To build docker images using docker compose: 
-
+```
 docker-compose build
+```
 <img width="1061" height="108" alt="image" src="https://github.com/user-attachments/assets/e3fec380-8c51-4062-976f-3391b4b3f123" />
 
 
@@ -202,56 +203,57 @@ kubectl apply -f .\k8s\.
 
 To test the application from your local device use port-forward
 Backend service: 
+```
 kubectl port-forward svc/backend-service 5000:5000
+```
+<img width="1596" height="117" alt="image" src="https://github.com/user-attachments/assets/183dbae8-609f-4186-b4e0-c78e5a4a83d5" />
 
 
-Open the browser and type: http://localhost:5000/health
+Open the browser and type: 
+```
+http://localhost:5000/health
+```
+<img width="650" height="217" alt="image" src="https://github.com/user-attachments/assets/bd12c182-98ba-44c1-941d-3c888ea5337b" />
 
 
-
-
-
-
-Backend service: 
+Frontend service:
+```
 kubectl port-forward svc/frontend-service 8080:80
+```
+<img width="1606" height="79" alt="image" src="https://github.com/user-attachments/assets/f69bbbac-8951-4a5d-8c53-59e793b8631b" />
 
 
+To get the current version selector: 
+```
+kubectl describe service frontend-service
+```
+<img width="1255" height="527" alt="image" src="https://github.com/user-attachments/assets/26882bb7-20ac-4437-8403-0cdfa5e592a6" />
 
 
-
-
-
-
-
-
-
-
-To get the current version selector: kubectl describe service frontend-service
-
-
-
-
-To check if frontend is running on Blue services: http://localhost:8080/health
+To check if frontend is running on Blue services: 
+```
+http://localhost:8080/health
+```
+<img width="950" height="234" alt="image" src="https://github.com/user-attachments/assets/08ac46fc-db9d-46ae-9adc-230c1bc8a9d1" />
 
 
 Switch the services to green:
+```
 kubectl patch service frontend-service -p '{"spec":{"selector":{"version":"green"}}}'
+```
+<img width="1247" height="97" alt="image" src="https://github.com/user-attachments/assets/3291832c-e4b1-4f19-a1d6-125167189107" />
 
-
-
-
-
-
-
-
-
-
-
-Now http://localhost:8080/health should show Green frontend
-
-Note: we have to stop the port-forwarding and re do it 
-
+Note: we have to stop the port-forwarding for frontend and re do it, however inside the node it works fine
+```
 kubectl port-forward svc/frontend-service 8080:80
+```
+<img width="1586" height="252" alt="image" src="https://github.com/user-attachments/assets/83f35c6b-f792-493d-b283-d204e3a171b5" />
+
+Now test the health of frontend it should show Frontend services are running from Green application
+```
+http://localhost:8080/health
+```
+<img width="864" height="229" alt="image" src="https://github.com/user-attachments/assets/1a24bdb7-ad2a-4ad5-b4fd-ab6c62abd263" />
 
 
 To clean up 
