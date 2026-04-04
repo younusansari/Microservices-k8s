@@ -268,10 +268,44 @@ http://localhost:8080
 <img width="1866" height="1272" alt="image" src="https://github.com/user-attachments/assets/0611d35d-b1a6-4c8e-97b8-630125235106" />
 
 
-To clean up 
-<img width="1476" height="189" alt="image" src="https://github.com/user-attachments/assets/606a4c60-4664-49eb-a90e-7a3621ccca5c" />
 
-<img width="1433" height="290" alt="image" src="https://github.com/user-attachments/assets/40e99d91-dad0-4183-8e05-f0dcbf6030fd" />
+Clean up
 
+To see the deployment
+```
+kubectl get deployment
+```
+To delete the deployment
+
+```
+kubectl delete deployment backend
+```
+
+```
+kubectl delete deployment frontend-blue
+```
+
+```
+kubectl delete deployment frontend-green
+```
+
+<img width="1486" height="343" alt="image" src="https://github.com/user-attachments/assets/bc26a29c-50d3-46d7-9144-510b389de265" />
+
+To see the services
+```
+kubectl get svc
+```
+
+To delete the services
+```
+kubectl delete svc backend-service
+```
+
+```
+kubectl delete svc frontend-service
+```
+
+
+<img width="1416" height="270" alt="image" src="https://github.com/user-attachments/assets/b0fac0e9-45d6-4185-91ea-0eb0f245a8a9" />
 
 
